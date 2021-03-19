@@ -27,21 +27,25 @@
                         <a href="" class="font-bold">{{ $post->user->name }}</a> <span class="text-xs text-gray-400">{{ $post->created_at->diffForHumans() }}</span>
                         <p>{{ $post->body }}</p>
 
-                        @auth    
+                           
                             <div class="flex item-center">
-                                <form action="{{ route('posts.likes', $post->id)}}" method="post" class="mr-2">
-                                    @csrf
-                                    <button type="submit" class="text-blue-500">like</button>
-                                </form>
-
-                                <form action="" method="post" class="mr-2">
-                                    @csrf
-                                    <button type="submit" class="text-blue-500">unlike</button>
-                                </form>
-
-                                <span>{{ $post->likes->count() }}</span>
+                                @auth 
+                                @if (!$post->likedBy(auth()->user()))    
+                                    <form action="{{ route('posts.likes', $post)}}" method="post" class="mr-2">
+                                        @csrf
+                                        <button type="submit" class="text-blue-500">like</button>
+                                    </form>
+                                @else      
+                                    <form action="{{ route('posts.likes', $post)}}" method="post" class="mr-2">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-blue-500">unlike</button>
+                                    </form>
+                                @endif
+                                @endauth
+                                <span>{{ $post->likes->count() }} Like</span>
                             </div>
-                        @endauth
+                        
                     </div>
                 @endforeach
 

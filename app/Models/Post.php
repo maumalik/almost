@@ -14,6 +14,11 @@ class Post extends Model
         'body'
     ];
 
+    public function likedBy(User $user)
+    {
+        return $this->likes->contains('user_id', $user->id);
+    }
+
     /**
      * Get the user that owns the Post
      *
